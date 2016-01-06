@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class CompTime {
 
 	private Integer id;
-	// private String employeeEmail;
 	private Date compTimeDate;
 	private int compTimeHour;
 	private Boolean status;
@@ -59,7 +58,7 @@ public class CompTime {
 		this.compTimeHour = compTimeHour;
 	}
 
-	@Column(name = "rq_status", nullable = false, columnDefinition="char(1)")
+	@Column(name = "approval_status", nullable = false, columnDefinition="char(1)")
 	public Boolean getStatus() {
 		return status;
 	}

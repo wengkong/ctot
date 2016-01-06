@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hpe.ctot.model.CompTime;
 import com.hpe.ctot.model.Employee;
 import com.hpe.ctot.repository.EmployeeRepository;
+import com.hpe.ctot.service.UserDetails;
 
 @EnableAutoConfiguration
 @RequestMapping("/employees")
@@ -33,6 +36,10 @@ public class EmployeeController {
 	@RequestMapping(method = GET)
 	public Iterable<Employee> findAll() {
 		log.info("Find all");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		UserDetails user = (UserDetails) auth.getPrincipal();
+		System.out.println( "username: " + user.getUsername());
+		System.out.println( "id: " + user.getId());
 		return employeeRepository.findAll();
 	}
 
