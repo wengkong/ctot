@@ -22,6 +22,7 @@ public class CompTime {
 	private Date compTimeDate;
 	private int compTimeHour;
 	private Boolean status;
+	private String remark;
 	private Boolean deleteFlag;
 	private Employee employee;
 
@@ -66,6 +67,15 @@ public class CompTime {
 	public void setStatus(Boolean status) {
 		this.status = status;
 
+	}
+	
+	@Column(name = "remark", nullable = false, length = 200)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 	@Column(name = "delete_flag", nullable = false, columnDefinition="char(1)")
