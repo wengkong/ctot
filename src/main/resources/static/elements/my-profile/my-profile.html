@@ -1,0 +1,65 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-profile">
+  <template>
+    <iron-ajax
+	    auto
+	    url="http://localhost:8080/profile"
+	    handle-as="json"
+	    on-request="handleRequest"
+	    on-response="handleResponse">
+    </iron-ajax>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>    
+    <!-- <h2 class="page-title">{{greeting}}</h2> -->
+    <span class="paper-font-body2">Email: {{profile.email}}</span><br>
+    <span class="paper-font-body2">Full Name: </span>
+    <input class="paper-font-body2" value="{{profile.fullName::input}}"><br>
+    <span class="paper-font-body2">Manager's Email: </span>
+    <input class="paper-font-body2" value="{{profile.managerEmail::input}}"><br>
+    <span class="paper-font-body2">Overtime: {{profile.sumOfWorkedHour}}</span><br>
+    <span class="paper-font-body2">Comp Time: {{profile.sumOfCompTimeTakenHour}}</span>	
+<!-- 
+    <template is="dom-repeat" items="{{employees}}">
+      <div>{{item.fname}}</div>
+      <div>{{item.lastName}}</div><br>
+    </template>
+ -->	    
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      Polymer({
+        is: 'my-profile',
+		ready: function() {
+			console.log('my-profile is ready');
+		},
+		handleRequest: function() {
+			console.log('handle request');
+		},
+		handleResponse: function(data) {
+			console.log('handle response');
+            //this.employees = data.detail.response;
+            //console.log('list: ' + this.employees);            
+            this.profile = data.detail.response;
+            console.log(this.profile);
+		},
+        properties: {
+          greeting: {
+            type: String,
+            value: 'Welcome!',
+            notify: true
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>
