@@ -1,5 +1,8 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/iron-label/iron-label.html">
 
 <dom-module id="my-profile">
   <template>
@@ -7,29 +10,50 @@
 	    auto
 	    url="http://localhost:8080/profile"
 	    handle-as="json"
-	    on-request="handleRequest"
-	    on-response="handleResponse">
+	    on-request="findEmployee"
+	    on-response="showEmployee">
     </iron-ajax>
+    <iron-ajax
+    	id="saveProfileAjax"
+	    url="http://localhost:8080/profile"
+	    method="POST"
+	    content-type="application/json"
+	    handle-as="json"
+	    on-response="showEmployee">
+    </iron-ajax>
+    
     <style include="shared-styles"></style>
     <style>
       :host {
         display: block;
       }
     </style>    
-    <!-- <h2 class="page-title">{{greeting}}</h2> -->
-    <span class="paper-font-body2">Email: {{profile.email}}</span><br>
-    <span class="paper-font-body2">Full Name: </span>
-    <input class="paper-font-body2" value="{{profile.fullName::input}}"><br>
-    <span class="paper-font-body2">Manager's Email: </span>
-    <input class="paper-font-body2" value="{{profile.managerEmail::input}}"><br>
-    <span class="paper-font-body2">Overtime: {{profile.sumOfWorkedHour}}</span><br>
-    <span class="paper-font-body2">Comp Time: {{profile.sumOfCompTimeTakenHour}}</span>	
-<!-- 
-    <template is="dom-repeat" items="{{employees}}">
-      <div>{{item.fname}}</div>
-      <div>{{item.lastName}}</div><br>
-    </template>
- -->	    
+    <h2 class="page-title">{{message}}</h2>
+    <span>{{message}}</span>
+    <input type="hidden" value="{{employee.id}}"/>
+    <table border="0">
+    	<tr>	
+    		<td><iron-label for="email">User Name</iron-label></td>
+    		<td><span id="email">{{employee.email}}</span></td>
+    	</tr>
+    	<tr>
+    		<td><iron-label for="fullName">Full Name</iron-label></td>
+    		<td><input id="fullName" is="iron-input" bind-value="{{employee.fullName}}"></td>
+    	</tr>
+    	<tr>
+    		<td><iron-label for="managerEmail">Manager's Email</iron-label></td>
+    		<td><input id="managerEmail" is="iron-input" bind-value="{{employee.managerEmail}}"></td>
+    	</tr>
+    	<tr>
+    		<td><iron-label for="sumOfWorkedHour">Overtime</iron-label></td>
+    		<td><div id="sumOfWorkedHour">{{employee.sumOfWorkedHour}}</div></td>
+    	</tr>
+    	<tr>
+    		<td><iron-label for="sumOfCompTimeTakenHour">Comp Time</iron-label></td>
+    		<td><span id="sumOfCompTimeTakenHour">{{employee.sumOfCompTimeTakenHour}}</span></td>
+    	</tr>
+    </table><br>    
+    <paper-button raised on-click="saveEmployee">Submit</paper-button>
   </template>
 
   <script>
@@ -41,22 +65,30 @@
 		ready: function() {
 			console.log('my-profile is ready');
 		},
-		handleRequest: function() {
-			console.log('handle request');
+		findEmployee: function() {
+			console.log('findEmployee');
 		},
-		handleResponse: function(data) {
-			console.log('handle response');
-            //this.employees = data.detail.response;
-            //console.log('list: ' + this.employees);            
-            this.profile = data.detail.response;
-            console.log(this.profile);
+		showEmployee: function(data) {
+			console.log('showEmployee...');
+            this.employee = data.detail.response;
+            console.log(this.employee);
+            this.message = "Profile updated.";
 		},
         properties: {
-          greeting: {
+          employee: {
+            notify: true
+          },
+          message: {
             type: String,
-            value: 'Welcome!',
+            value: '',
             notify: true
           }
+        },
+        saveEmployee: function() {
+        	console.log('saveEmployee...');	
+        	this.$.saveProfileAjax.body = this.employee;
+        	this.$.saveProfileAjax.generateRequest();
+        	console.log('saveProfile ends...');
         }
       });
     })();
